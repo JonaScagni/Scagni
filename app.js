@@ -1,5 +1,9 @@
 
-const listaProducto = []
+
+
+
+let carrito = [];
+let listaProducto = []
 
 listaProducto.push(new Producto("Vino Malbec", "Emilia", 1700));
 listaProducto.push(new Producto("Vino Cabernet", "Portillo", 1500));
@@ -15,61 +19,88 @@ listaProducto.push(new Producto ("Whisky","Johnnie Walker, Red Label", 11500));
 listaProducto.push(new Producto ("Whisky","Johnnie Walker, Black Label", 19500));
 
 
+localStorage.setItem("productos", JSON.stringify(productos));
 
-const detalleFactura = []
+const selecProducto = document.querySelector('#productos');
+const botonAgregar = document.querySelector('#agregar');
 
-let salir;
-let cantidad;
-let opcion;
-let total = 0;
+function traerItemsStorage() {
 
-// Menu de compras
-function menu () {
+  producto = JSON.parse(localStorage.getItem('productos')) || [];
+  carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+} 
 
-do {
-    const listaStringProductos = listaProducto.map((listaProducto,index) => 
+function popularDropdown() {
 
-    `${index + 1}  - ${listaProducto.nombre}  ${listaProducto.marca}   ${listaProducto.precio}`);
+  listaProducto.forEach(({nombre,marca,precio},index) => {
 
-     opcion = +prompt("Que producto desea elegir?" + "\n" + listaStringProductos.join("\n"))
-
-     while(opcion <= 0 || opcion > listaProducto.length || isNaN(opcion) || opcion == undefined) {
-     opcion = +prompt("Que producto desea elegir?" + "\n" + listaStringProductos.join("\n"))
-     }
-
-      cantidad = +prompt("Ingrese la cantidad que desea comprar:");
-
-     while(cantidad < 0 || isNaN(cantidad) || cantidad == undefined) {
-      cantidad = +prompt("Ingrese la cantidad que desea comprar:");
-     
-     }
-
-    detalleFactura.push(new itemFactura(listaProducto[opcion-1].nombre,listaProducto[opcion-1].precio,cantidad));
-
-    salir = prompt("Desea agregar otro producto? si/no");
-    
-
-}while(salir != "no") 
-
+    const option = document.createElement('option');
+    option.textContent = `${nombre} - ${marca} - ${precio}`;
+    option.value = index;
+    selecProducto.appendChild(option);
+  });
 }
 
-alert("Bienvenido a nuestra tienda de bebeidas digital, presione aceptar para comenzar") 
+function dibujarTabla() {
 
-menu ();
+  const bodyTabla = document.getElementById('items');
+  bodyTabla.innerHTML = ``;
+  // tengo un error en esta funcion, que no me muestra los objetos de mi carrito y no me doy cuenta como resolverlo
+  carrito.forEach((item,index) => {
+     
+    const {nombre,precio,marca}  = item;
+    
+ 
+      bodyTabla.innerHTML = bodyTabla.innerHTML + `
+      <tr>
+        <th scope="row">${index+1}</th>
+        <th>${carrito.nombre || ''}</th>
+        <th>${carrito.precio || ''}</th>
+        <th>${carrito.marca }</th>
+        
+        
+      </tr>
+    `;
+  })
+}
 
-// ticket
 
-total = detalleFactura.reduce((acumulador,item) => acumulador + item.subtotal,0);
+document.addEventListener('DOMContentLoaded', () => {
+  traerItemsStorage();
+  popularDropdown();
+  dibujarTabla();
+  
+ 
+  botonAgregar.addEventListener("submit", (e) =>{
+    e.preventDefault();
+    const productoSeleccionado = listaProducto.find((item,index) => index === +selecProducto.value)
+    if( productoSeleccionado === undefined) {
+      alert("seleccione un producto");
+      return;
+    }
+    
+  const indiceCarrito = carrito.findIndex((Item) => Item.producto === productoSeleccionado);
+  if(indiceCarrito !== -1){
+    carrito[indiceCarrito].cantidad++;
+  }else {
+    const Item = new item(productoSeleccionado,1);
+    carrito.push(Item);
+  }  
+    localStorage.setItem('carrito',JSON.stringify(carrito));
+    dibujarTabla();
+  
+   });
+  });
 
-const Ticket = detalleFactura.map((itemFactura,index,) => 
-
-`${index + 1}   ${itemFactura.nombre}    ${itemFactura.cantidad}      ${itemFactura.precio}        ${itemFactura.subtotal}`);
-
-alert( "PRODUCTO   CANTIDAD     PRECIO    SUBTOTAL" + "\n"
-     + Ticket.join("\n") + ` \n
-     El total de la compra es:  ${total}`);
+    
+    
+function datosBancarios () {
+  alert("Ingrese los datos de su tarjeta de credito o debito")
+}
 
 
+const boton = document.querySelector('#botonComprar');
+boton.addEventListener("click", datosBancarios);
 
 
 

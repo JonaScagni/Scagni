@@ -1,3 +1,23 @@
 body {
     background-color: aquamarine;
 }
+.menu{
+    align-self: flex-end;
+}
+
+.cantidad-container {
+    display: flex;
+    align-items: center;
+  }
+  
+  button {
+    padding: 5px 10px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+  
+  #cantidad {
+    margin: 0 10px;
+    font-size: 24px;
+  }
+  
