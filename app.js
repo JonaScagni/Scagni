@@ -1,32 +1,30 @@
 
+ let carrito = [];
+ let listaProducto = [];
+ 
+listaProducto.push(new producto("Vino Malbec", "Emilia", 1700));
+listaProducto.push(new producto("Vino Cabernet", "Portillo", 1500));
+listaProducto.push(new producto("Vino Sira", "EstibaI", 1300));
+listaProducto.push(new producto ("Cerveza IPA","Andes", 1200));
+listaProducto.push(new producto ("Cerveza ROJA","Imperial", 1100));
+listaProducto.push(new producto ("Cerveza RUBIA","Andes", 1000));
+listaProducto.push(new producto ("Fernet 750ml","Branca", 3750));
+listaProducto.push(new producto ("Fernet 750ml","1882", 2550));
+listaProducto.push(new producto ("Vodka","Smirnof", 2850));
+listaProducto.push(new producto ("Vodka","SKY", 3950));
+listaProducto.push(new producto ("Whisky","Johnnie Walker, Red Label", 11500));
+listaProducto.push(new producto ("Whisky","Johnnie Walker, Black Label", 19500));
 
 
-
-let carrito = [];
-let listaProducto = []
-
-listaProducto.push(new Producto("Vino Malbec", "Emilia", 1700));
-listaProducto.push(new Producto("Vino Cabernet", "Portillo", 1500));
-listaProducto.push(new Producto("Vino Sira", "EstibaI", 1300));
-listaProducto.push(new Producto ("Cerveza IPA","Andes", 1200));
-listaProducto.push(new Producto ("Cerveza ROJA","Imperial", 1100));
-listaProducto.push(new Producto ("Cerveza RUBIA","Andes", 1000));
-listaProducto.push(new Producto ("Fernet 750ml","Branca", 3750));
-listaProducto.push(new Producto ("Fernet 750ml","1882", 2550));
-listaProducto.push(new Producto ("Vodka","Smirnof", 2850));
-listaProducto.push(new Producto ("Vodka","SKY", 3950));
-listaProducto.push(new Producto ("Whisky","Johnnie Walker, Red Label", 11500));
-listaProducto.push(new Producto ("Whisky","Johnnie Walker, Black Label", 19500));
-
-
-localStorage.setItem("productos", JSON.stringify(productos));
+localStorage.setItem('productos', JSON.stringify(productos));
 
 const selecProducto = document.querySelector('#productos');
 const botonAgregar = document.querySelector('#agregar');
+const productoAgregado = document.querySelector('#tabla')
 
 function traerItemsStorage() {
 
-  producto = JSON.parse(localStorage.getItem('productos')) || [];
+  productos = JSON.parse(localStorage.getItem('productos')) || [];
   carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 } 
 
@@ -35,33 +33,10 @@ function popularDropdown() {
   listaProducto.forEach(({nombre,marca,precio},index) => {
 
     const option = document.createElement('option');
-    option.textContent = `${nombre} - ${marca} - ${precio}`;
+    option.textContent = `${nombre} - ${marca} - $${precio}`;
     option.value = index;
     selecProducto.appendChild(option);
   });
-}
-
-function dibujarTabla() {
-
-  const bodyTabla = document.getElementById('items');
-  bodyTabla.innerHTML = ``;
-  // tengo un error en esta funcion, que no me muestra los objetos de mi carrito y no me doy cuenta como resolverlo
-  carrito.forEach((item,index) => {
-     
-    const {nombre,precio,marca}  = item;
-    
- 
-      bodyTabla.innerHTML = bodyTabla.innerHTML + `
-      <tr>
-        <th scope="row">${index+1}</th>
-        <th>${carrito.nombre || ''}</th>
-        <th>${carrito.precio || ''}</th>
-        <th>${carrito.marca }</th>
-        
-        
-      </tr>
-    `;
-  })
 }
 
 
@@ -71,39 +46,101 @@ document.addEventListener('DOMContentLoaded', () => {
   dibujarTabla();
   
  
-  botonAgregar.addEventListener("submit", (e) =>{
+ botonAgregar.addEventListener('submit', (e) =>{
     e.preventDefault();
     const productoSeleccionado = listaProducto.find((item,index) => index === +selecProducto.value)
-    if( productoSeleccionado === undefined) {
-      alert("seleccione un producto");
+         
+    if(productoSeleccionado === undefined) {
+      Swal.fire(
+        'Debe seleccionar un producto',
+        'Depliegle la lista de productos',
+        'error'
+      )
       return;
     }
-    
-  const indiceCarrito = carrito.findIndex((Item) => Item.producto === productoSeleccionado);
-  if(indiceCarrito !== -1){
-    carrito[indiceCarrito].cantidad++;
-  }else {
-    const Item = new item(productoSeleccionado,1);
-    carrito.push(Item);
-  }  
+   
+    const indiceCarrito = carrito.findIndex((item) => item.nombre === productoSeleccionado);
+    if(indiceCarrito !== -1){
+    carrito[indiceCarrito].marca++;
+    }else {    
+     const items = new producto(productoSeleccionado,1);
+     carrito.push(items);
+    }  
     localStorage.setItem('carrito',JSON.stringify(carrito));
     dibujarTabla();
   
+   })
    });
+
+  
+ function dibujarTabla() {
+  const total = document.querySelector('#total');
+  const bodyTabla = document.getElementById('items');
+  bodyTabla.innerHTML = '';
+
+  carrito.forEach((item,index) => {
+   
+    bodyTabla.innerHTML += `
+      <tr>
+        <th scope="row">${index + 1}</th>
+        <th>${item.nombre.nombre}</th>
+        <th>${item.nombre.marca}</th>
+        <th>${item.nombre.precio}</th>
+        <th>${item.marca}</th>
+        <th>${item.marca*item.nombre.precio}</th>
+        <th id="item-${index}">
+         <button id="item-${index}" class="btn btn-danger">X</button>
+        </th>
+      </tr>
+    `;
+
+    //bodyTabla.appendChild();
+
+        document.querySelector(`#item-${index}`).addEventListener('click', () => {
+         carrito.splice(index,1);
+         dibujarTabla();
+         localStorage.setItem('carrito', JSON.stringify(carrito));
+        });
+
   });
 
-    
-    
-function datosBancarios () {
-  alert("Ingrese los datos de su tarjeta de credito o debito")
+  total.textContent = carrito.reduce((acc,item) => acc + item.nombre.precio*item.marca , 0);
 }
 
+function datosBancarios () {
+  Swal.fire({
+    title: 'Ingrese su nombre de usuario',
+    input: 'text',
+    inputAttributes: {
+      autocapitalize: 'off'
+    },
+    showCancelButton: true,
+    confirmButtonText: 'Aceptar',
+    showLoaderOnConfirm: true,
+    preConfirm: (login) => {
+      return fetch(`//api.github.com/users/${login}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(response.statusText)
+          }
+          return response.json()
+        })
+        .catch(error => {
+          Swal.showValidationMessage(
+            `Request failed: ${error}`
+          )
+        })
+    },
+    allowOutsideClick: () => !Swal.isLoading()
+  }).then((result) => {
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: `${result.value.login}'s avatar`,
+        imageUrl: result.value.avatar_url
+      })
+    }
+  })
+}
 
 const boton = document.querySelector('#botonComprar');
 boton.addEventListener("click", datosBancarios);
-
-
-
-
-
-

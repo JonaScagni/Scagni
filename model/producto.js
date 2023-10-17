@@ -1,4 +1,4 @@
-class Producto {
+class producto {
     nombre;
     marca;
     precio;

@@ -1,5 +1,6 @@
 body {
-    background-color: aquamarine;
+    background-image: url(../imagenes/fondo.jpg);
+    background-size: cover;
 }
 .menu{
     align-self: flex-end;
@@ -20,4 +21,15 @@ body {
     margin: 0 10px;
     font-size: 24px;
   }
-  
+
+  h1{
+    color: #a5ff4c;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-size: 50px;
+    text-align: center;
+  }
+  .banner{
+    background-color: rgb(19, 18, 18);
+    color: #a5ff4c ;
+    text-align: center;
+  }

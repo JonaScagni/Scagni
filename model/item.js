@@ -1,9 +1,13 @@
 class item {
-    producto;
+    nombre;
+    precio;
     cantidad;
+    subtotal;
 
-    contructor (producto,cantidad) {
-        this.producto = producto;
-        this.cantidad = cantidad;
+    constructor(nombre,precio,cantidad){
+    this.nombre = nombre;
+    this.precio = precio;
+    this.cantidad = cantidad;
+    this.subtotal = this.precio*this.cantidad;
     }
 }
