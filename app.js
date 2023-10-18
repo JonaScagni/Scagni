@@ -1,6 +1,7 @@
 
  let carrito = [];
  let listaProducto = [];
+ //let productos;
  
 listaProducto.push(new producto("Vino Malbec", "Emilia", 1700));
 listaProducto.push(new producto("Vino Cabernet", "Portillo", 1500));
@@ -15,12 +16,12 @@ listaProducto.push(new producto ("Vodka","SKY", 3950));
 listaProducto.push(new producto ("Whisky","Johnnie Walker, Red Label", 11500));
 listaProducto.push(new producto ("Whisky","Johnnie Walker, Black Label", 19500));
 
-
 localStorage.setItem('productos', JSON.stringify(productos));
+
 
 const selecProducto = document.querySelector('#productos');
 const botonAgregar = document.querySelector('#agregar');
-const productoAgregado = document.querySelector('#tabla')
+
 
 function traerItemsStorage() {
 
@@ -38,7 +39,6 @@ function popularDropdown() {
     selecProducto.appendChild(option);
   });
 }
-
 
 document.addEventListener('DOMContentLoaded', () => {
   traerItemsStorage();
@@ -65,7 +65,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }else {    
      const items = new producto(productoSeleccionado,1);
      carrito.push(items);
-    }  
+    } 
+    
+    Toastify({
+      text: 'Producto Agregado',
+      duration: 3000,
+      gravity: 'bottom',
+      position: 'right'
+      }).showToast();
+
     localStorage.setItem('carrito',JSON.stringify(carrito));
     dibujarTabla();
   
@@ -79,8 +87,9 @@ document.addEventListener('DOMContentLoaded', () => {
   bodyTabla.innerHTML = '';
 
   carrito.forEach((item,index) => {
-   
-    bodyTabla.innerHTML += `
+    const tr = document.createElement('tr');
+    tr.classList.add
+    tr.innerHTML += `
       <tr>
         <th scope="row">${index + 1}</th>
         <th>${item.nombre.nombre}</th>
@@ -89,12 +98,12 @@ document.addEventListener('DOMContentLoaded', () => {
         <th>${item.marca}</th>
         <th>${item.marca*item.nombre.precio}</th>
         <th id="item-${index}">
-         <button id="item-${index}" class="btn btn-danger">X</button>
+         <button id="item-${index}" class="btn btn-danger">ELIMINAR</button>
         </th>
       </tr>
     `;
 
-    //bodyTabla.appendChild();
+    bodyTabla.appendChild(tr);
 
         document.querySelector(`#item-${index}`).addEventListener('click', () => {
          carrito.splice(index,1);
