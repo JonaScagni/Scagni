@@ -36,7 +36,17 @@ body {
   footer{
     padding: 15px;
     margin: 5px;
-    background-color: #a5ff4c;
+    background-color: #52a102;
     display: flex;
+    flex-direction: row;
     align-items: flex-end;
+    justify-content: center;
+  }
+  .piepag{
+    list-style: none;
+    text-decoration: none;
+    gap: 85px;
+    display: flex;
+    justify-content: space-around;
+    align-self: baseline;
   }

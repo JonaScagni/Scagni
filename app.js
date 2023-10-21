@@ -1,8 +1,7 @@
 
  let carrito = [];
  let listaProducto = [];
- //let productos;
- 
+  
 listaProducto.push(new producto("Vino Malbec", "Emilia", 1700));
 listaProducto.push(new producto("Vino Cabernet", "Portillo", 1500));
 listaProducto.push(new producto("Vino Sira", "EstibaI", 1300));
@@ -117,39 +116,90 @@ document.addEventListener('DOMContentLoaded', () => {
 }
 
 function datosBancarios () {
+
   Swal.fire({
-    title: 'Ingrese su nombre de usuario',
-    input: 'text',
-    inputAttributes: {
-      autocapitalize: 'off'
-    },
+    title: 'Efectuar Pago',
+    inputLabel: 'Ingrese los 16 numeros de su tarjeta',
+    input: 'number',
+    confirmButtonText: 'Pagar',
+    confirmButtonColor: '#52a102',
     showCancelButton: true,
-    confirmButtonText: 'Aceptar',
-    showLoaderOnConfirm: true,
-    preConfirm: (login) => {
-      return fetch(`//api.github.com/users/${login}`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(response.statusText)
-          }
-          return response.json()
+    cancelButtonText: 'Cancelar',
+    cancelButtonColor: '#FF0000'
+}).then((result) => {
+    if (result.isConfirmed) { 
+        
+        Swal.fire({
+            title: 'Registro de Usuario',
+            inputLabel: 'Ingrese el codigo de seguridad de su tarjeta',
+            input: 'number',
+            inputPlaceholder: '123',
+            showCancelButton: true,
+            cancelButtonText: 'Cancelar',
+            cancelButtonColor: '#FF0000'
+            
+
+        }).then((result) => {
+            if (result.isConfirmed) {
+              
+                Swal.fire({
+                    title: `Pago Realizado`,
+                    icon: 'success',
+                    text: `Gracias Por Su Compra`
+                });
+            }
         })
-        .catch(error => {
-          Swal.showValidationMessage(
-            `Request failed: ${error}`
-          )
-        })
-    },
-    allowOutsideClick: () => !Swal.isLoading()
-  }).then((result) => {
-    if (result.isConfirmed) {
-      Swal.fire({
-        title: `${result.value.login}'s avatar`,
-        imageUrl: result.value.avatar_url
-      })
     }
-  })
+})
+
+  
 }
 
 const boton = document.querySelector('#botonComprar');
 boton.addEventListener("click", datosBancarios);
+
+
+const btnLogin = document.querySelector('#login');
+const usuario = {
+    mailUsuario: '',
+    password: ''
+}
+
+btnLogin.addEventListener('click', () => {
+
+  Swal.fire({
+      title: 'Registro de Usuario',
+      inputLabel: 'Ingrese mail',
+      input: 'email',
+      confirmButtonText: 'Enviar',
+      confirmButtonColor: '#52a102',
+      showCancelButton: true,
+      cancelButtonText: 'Cancelar',
+      cancelButtonColor: '#FF0000'
+  }).then((result) => {
+      if (result.isConfirmed) { 
+          usuario.mailUsuario = result.value; 
+          Swal.fire({
+              title: 'Registro de Usuario',
+              inputLabel: 'Ingrese su password',
+              input: 'password',
+              inputPlaceholder: '1234',
+              showCancelButton: true,
+              cancelButtonText: 'Cancelar',
+              cancelButtonColor: '#FF0000'
+             
+
+          }).then((result) => {
+              if (result.isConfirmed) {
+                  usuario.password = result.value;
+                  Swal.fire({
+                      title: `Bienvenido ${usuario.mailUsuario}!`,
+                      icon: 'success',
+                      text: `Disfrute de nuestra variedad de bebidas`
+                  });
+              }
+          })
+      }
+  })
+
+});
