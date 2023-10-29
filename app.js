@@ -1,122 +1,68 @@
 
  let carrito = [];
  let listaProducto = [];
-  
-listaProducto.push(new producto("Vino Malbec", "Emilia", 1700));
-listaProducto.push(new producto("Vino Cabernet", "Portillo", 1500));
-listaProducto.push(new producto("Vino Sira", "EstibaI", 1300));
-listaProducto.push(new producto ("Cerveza IPA","Andes", 1200));
-listaProducto.push(new producto ("Cerveza ROJA","Imperial", 1100));
-listaProducto.push(new producto ("Cerveza RUBIA","Andes", 1000));
-listaProducto.push(new producto ("Fernet 750ml","Branca", 3750));
-listaProducto.push(new producto ("Fernet 750ml","1882", 2550));
-listaProducto.push(new producto ("Vodka","Smirnof", 2850));
-listaProducto.push(new producto ("Vodka","SKY", 3950));
-listaProducto.push(new producto ("Whisky","Johnnie Walker, Red Label", 11500));
-listaProducto.push(new producto ("Whisky","Johnnie Walker, Black Label", 19500));
-
-localStorage.setItem('productos', JSON.stringify(productos));
-
 
 const selecProducto = document.querySelector('#productos');
 const botonAgregar = document.querySelector('#agregar');
 
 
 function traerItemsStorage() {
-
   productos = JSON.parse(localStorage.getItem('productos')) || [];
-  carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-} 
-
-function popularDropdown() {
-
-  listaProducto.forEach(({nombre,marca,precio},index) => {
-
-    const option = document.createElement('option');
-    option.textContent = `${nombre} - ${marca} - $${precio}`;
-    option.value = index;
-    selecProducto.appendChild(option);
-  });
+  carritoCompras = JSON.parse(localStorage.getItem('carrito')) || [];
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  traerProductos();
+  cargarEventListeners();
+  dibujarProductos();
   traerItemsStorage();
-  popularDropdown();
   dibujarTabla();
   
- 
- botonAgregar.addEventListener('submit', (e) =>{
-    e.preventDefault();
-    const productoSeleccionado = listaProducto.find((item,index) => index === +selecProducto.value)
-         
-    if(productoSeleccionado === undefined) {
-      Swal.fire(
-        'Debe seleccionar un producto',
-        'Depliegle la lista de productos',
-        'error'
-      )
-      return;
-    }
-   
-    const indiceCarrito = carrito.findIndex((item) => item.nombre === productoSeleccionado);
-    if(indiceCarrito !== -1){
-    carrito[indiceCarrito].marca++;
-    }else {    
-     const items = new producto(productoSeleccionado,1);
-     carrito.push(items);
-    } 
-    
-    Toastify({
-      text: 'Producto Agregado',
-      duration: 3000,
-      gravity: 'bottom',
-      position: 'right'
-      }).showToast();
+});
 
-    localStorage.setItem('carrito',JSON.stringify(carrito));
-    dibujarTabla();
-  
-   })
-   });
-
-  
  function dibujarTabla() {
+  console.log("function dibujarTabla()");
   const total = document.querySelector('#total');
   const bodyTabla = document.getElementById('items');
   bodyTabla.innerHTML = '';
 
-  carrito.forEach((item,index) => {
-    const tr = document.createElement('tr');
-    tr.classList.add
-    tr.innerHTML += `
-      <tr>
-        <th scope="row">${index + 1}</th>
-        <th>${item.nombre.nombre}</th>
-        <th>${item.nombre.marca}</th>
-        <th>${item.nombre.precio}</th>
-        <th>${item.marca}</th>
-        <th>${item.marca*item.nombre.precio}</th>
-        <th id="item-${index}">
-         <button id="item-${index}" class="btn btn-danger">ELIMINAR</button>
-        </th>
-      </tr>
-    `;
-
-    bodyTabla.appendChild(tr);
-
-        document.querySelector(`#item-${index}`).addEventListener('click', () => {
-         carrito.splice(index,1);
-         dibujarTabla();
-         localStorage.setItem('carrito', JSON.stringify(carrito));
-        });
-
+  carritoCompras.forEach((item,index) => {
+    
+    if(item.nombre != undefined)
+    {
+      console.log("Ingresó al IFFFFFF");
+      const tr = document.createElement('tr');
+       tr.classList.add
+       tr.innerHTML += `
+       <tr>
+         <th scope="row">${index + 1}</th>
+         <th>${item.nombre.nombre}</th>
+         <th>${item.nombre.marca}</th>
+         <th>${item.nombre.precio}</th>
+         <th>${item.marca}</th>
+         <th>${item.marca*item.nombre.precio}</th>
+         <th id="item-${index}">
+          <button id="item-${index}" class="btn btn-danger">ELIMINAR</button>
+         </th>
+       </tr>`;
+       bodyTabla.appendChild(tr);
+       document.querySelector(`#item-${index}`).addEventListener('click', () => {
+        carritoCompras.splice(index,1);
+        dibujarTabla();
+        agregarItem();
+        localStorage.setItem('carrito', JSON.stringify(carritoCompras));
+       });
+      }
+      total.textContent = carritoCompras.reduce(function (acc, item, indice, vector) {
+        if(item.nombre != undefined)        
+          acc = acc + item.nombre.precio*item.marca;
+        
+        return acc;
+        }, 0);
   });
-
-  total.textContent = carrito.reduce((acc,item) => acc + item.nombre.precio*item.marca , 0);
 }
 
 function datosBancarios () {
-
   Swal.fire({
     title: 'Efectuar Pago',
     inputLabel: 'Ingrese los 16 numeros de su tarjeta',
@@ -127,8 +73,8 @@ function datosBancarios () {
     cancelButtonText: 'Cancelar',
     cancelButtonColor: '#FF0000'
 }).then((result) => {
-    if (result.isConfirmed) { 
-        
+    if (result.isConfirmed) {
+
         Swal.fire({
             title: 'Registro de Usuario',
             inputLabel: 'Ingrese el codigo de seguridad de su tarjeta',
@@ -137,11 +83,8 @@ function datosBancarios () {
             showCancelButton: true,
             cancelButtonText: 'Cancelar',
             cancelButtonColor: '#FF0000'
-            
-
         }).then((result) => {
             if (result.isConfirmed) {
-              
                 Swal.fire({
                     title: `Pago Realizado`,
                     icon: 'success',
@@ -151,14 +94,10 @@ function datosBancarios () {
         })
     }
 })
-
-  
 }
 
 const boton = document.querySelector('#botonComprar');
 boton.addEventListener("click", datosBancarios);
-
-
 const btnLogin = document.querySelector('#login');
 const usuario = {
     mailUsuario: '',
@@ -166,7 +105,6 @@ const usuario = {
 }
 
 btnLogin.addEventListener('click', () => {
-
   Swal.fire({
       title: 'Registro de Usuario',
       inputLabel: 'Ingrese mail',
@@ -177,8 +115,8 @@ btnLogin.addEventListener('click', () => {
       cancelButtonText: 'Cancelar',
       cancelButtonColor: '#FF0000'
   }).then((result) => {
-      if (result.isConfirmed) { 
-          usuario.mailUsuario = result.value; 
+      if (result.isConfirmed) {
+          usuario.mailUsuario = result.value;
           Swal.fire({
               title: 'Registro de Usuario',
               inputLabel: 'Ingrese su password',
@@ -187,8 +125,6 @@ btnLogin.addEventListener('click', () => {
               showCancelButton: true,
               cancelButtonText: 'Cancelar',
               cancelButtonColor: '#FF0000'
-             
-
           }).then((result) => {
               if (result.isConfirmed) {
                   usuario.password = result.value;
@@ -201,5 +137,100 @@ btnLogin.addEventListener('click', () => {
           })
       }
   })
-
 });
+
+const listaItems = document.querySelector('#lista-items');
+let carritoCompras = [];
+let productosBebidas = [];
+
+function cargarEventListeners() {
+  
+  listaItems.addEventListener('click', agregarProducto);  
+  document.addEventListener('DOMContentLoaded', async () => {
+      
+      traerProductos();
+      dibujarProductos();
+      carritoCompras = JSON.parse(localStorage.getItem('carrito')) || [];
+  });
+}
+
+async function traerProductos() {
+  fetch ('./productos.json')
+  .then((response) => {
+   if (response.ok) {
+     return response.json();
+   }
+  })
+  .then((listaProducto) => {
+   productosBebidas = listaProducto;
+   console.log(productosBebidas)
+
+  dibujarProductos();
+  agregarProducto();
+  traerItemsStorage();
+  })
+
+ const response = await fetch('productos.json');
+ if (response.ok) {
+   productosBebidas = await response.json();
+   console.log(productosBebidas);
+ } else {
+      Toastify({
+          text: 'Hubo un problema en el servidor, intente nuevamente',
+          className: "Error"
+      }).showToast();
+ }
+}
+
+function dibujarProductos() {
+  let row = document.createElement('div');
+  row.classList.add('row');
+  row.innerHTML = ``;
+  let counter = 1;
+
+ productosBebidas.forEach ((item) => {
+      row.innerHTML += `
+          <div class="col-sm-3 mb-3">
+              <div class="card"  style="width: 18rem; gap: 15px;">
+                  <img src="${item.imagen}" class="card-img-top">
+                  <div class="card-body">
+                      <h4 class="card-title">${item.nombre}</h4>
+                      <p class="card-title">${item.marca}</p>
+                      <p class="precio">$${item.precio}</p>
+                      <a href="#" class="btn btn-primary button input agregar-carrito"  data-id="${item.id}">Agregar Al Carrito</a>
+
+                  </div>
+              </div> <!--.card-->
+          </div>
+      `;
+
+  });
+ listaItems.appendChild(row);
+
+}
+
+function agregarProducto(e) {
+  console.log("agregarProducto(e)");
+  e.preventDefault();
+  const id = e.target.dataset.id;
+  console.log(id);
+
+  const productoSeleccionado = productosBebidas.find((item) => item.id === +id);
+  console.log(productoSeleccionado);
+
+  const indiceCarrito = carritoCompras.findIndex((item) => item.nombre === productoSeleccionado);
+  if(indiceCarrito !== -1){
+  carritoCompras[indiceCarrito].marca++;
+  }else {
+   const items = new producto(productoSeleccionado,1);
+   carritoCompras.push(items);
+  }
+  Toastify({
+    text: 'Producto Agregado',
+    duration: 3000,
+    gravity: 'bottom',
+    position: 'right'
+    }).showToast();
+  localStorage.setItem('carrito',JSON.stringify(carritoCompras));
+  dibujarTabla();
+}

@@ -1,0 +1,86 @@
+[
+    {
+        "id": 1,
+        "imagen": "imagenes/vino-emilia.webp",
+        "nombre": "Vino Malbec",
+        "marca": "Emilia",
+        "precio": 1700
+    },
+    {
+        "id": 2,
+        "imagen": "imagenes/vino-portillo.webp",
+        "nombre": "Vino Cabernet",
+        "marca": "Portillo",
+        "precio": 1500
+    },
+    {
+        "id": 3,
+        "imagen": "imagenes/vino-alma.webp",
+        "nombre": "Vino Sira",
+        "marca": "EstibaI",
+        "precio": 1300
+    },
+    {
+        "id": 4,
+        "imagen": "imagenes/quilmes-ipa.webp",
+        "nombre": "Cerveza IPA",
+        "marca": "Quilmes",
+        "precio": 800
+    },
+    {
+        "id": 5,
+        "imagen": "imagenes/imperial-roja.webp",
+        "nombre": "Cerveza Roja",
+        "marca": "Imperial",
+        "precio": 700
+    },
+    {
+        "id": 6,
+        "imagen": "imagenes/andes-rubia.webp",
+        "nombre": "Cerveza Rubia",
+        "marca": "Andes",
+        "precio": 635
+    },
+    {
+        "id": 7,
+        "imagen": "imagenes/fernet-branca.webp",
+        "nombre": "Fernet 750ml",
+        "marca": "Branca",
+        "precio": 3250
+    },
+    {
+        "id": 8,
+        "imagen": "imagenes/fernet-buhero.jpg",
+        "nombre": "Fernet 750ml",
+        "marca": "Buhero",
+        "precio": 2530
+    },
+    {
+        "id": 9,
+        "imagen": "imagenes/whisky-black.webp",
+        "nombre": "Whisky",
+        "marca": "Johnnie Walker, Black Label",
+        "precio": 19500
+    },
+    {
+        "id": 10,
+        "imagen": "imagenes/whisky-red.webp",
+        "nombre": "Whisky",
+        "marca": "Johnnie Walker, Red Label",
+        "precio": 12650
+    },
+    {
+        "id": 11,
+        "imagen": "imagenes/vodka-smirnof.webp",
+        "nombre": "Vodka",
+        "marca": "Smirnoff",
+        "precio": 2350
+    },
+    {
+        "id": 12,
+        "imagen": "imagenes/vodka-skyy.webp",
+        "nombre": "Vodka",
+        "marca": "skyy",
+        "precio": 3650
+    }
+]

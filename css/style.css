@@ -50,3 +50,11 @@ body {
     justify-content: space-around;
     align-self: baseline;
   }
+
+
+.card-productos{
+  padding-bottom: 15px;
+  gap: 55px;
+  padding: 15px;
+  margin: 10px;
+}
